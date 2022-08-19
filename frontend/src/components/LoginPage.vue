@@ -29,10 +29,10 @@
 
 <script setup>
 import { getCurrentInstance, ref } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 // import router from 'src/router/index.js'
 const { $feathers } = getCurrentInstance().appContext.config.globalProperties
-const router = useRouter()
+// const router = useRouter()
 
 const emailText = ref('')
 const passText = ref('')
@@ -48,8 +48,9 @@ const login = (e, p) => {
 
   }).then(() => {
     // Logged in
+    alert('Logged In Successfully')
     console.log(userActive)
-    router.push({ path: '/register' })
+    // router.push({ path: '/register' })
     emailText.value = ''
     passText.value = ''
   }).catch(e => {
