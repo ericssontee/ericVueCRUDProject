@@ -8,7 +8,6 @@ import auth from '@feathersjs/authentication-client'
 const appFeathers = feathers()
 const socket = io('http://localhost:3030', { transports: ['websocket'] })
 
-// Configure an AJAX library (see below) with that client
 appFeathers.configure(socketio(socket))
 
 appFeathers.configure(auth({
