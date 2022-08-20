@@ -30,7 +30,6 @@
 <script setup>
 import { getCurrentInstance, ref } from 'vue'
 // import { useRouter } from 'vue-router'
-// import router from 'src/router/index.js'
 const { $feathers } = getCurrentInstance().appContext.config.globalProperties
 // const router = useRouter()
 

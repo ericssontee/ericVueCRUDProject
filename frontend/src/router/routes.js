@@ -8,6 +8,10 @@ const routes = [
     path: '/register',
     component: () => import('components/RegisterUserPage.vue')
   },
+  {
+    path: '/home',
+    component: () => import('components/main/HomePage.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it
