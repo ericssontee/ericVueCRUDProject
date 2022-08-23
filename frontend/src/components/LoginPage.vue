@@ -29,9 +29,9 @@
 
 <script setup>
 import { getCurrentInstance, ref } from 'vue'
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 const { $feathers } = getCurrentInstance().appContext.config.globalProperties
-// const router = useRouter()
+const router = useRouter()
 
 const emailText = ref('')
 const passText = ref('')
@@ -45,11 +45,11 @@ const login = (e, p) => {
     password: p,
     strategy: 'local'
 
-  }).then(() => {
+  }).then(async () => {
     // Logged in
     alert('Logged In Successfully')
     console.log(userActive)
-    // router.push({ path: '/register' })
+    await router.push({ path: '/home' })
     emailText.value = ''
     passText.value = ''
   }).catch(e => {

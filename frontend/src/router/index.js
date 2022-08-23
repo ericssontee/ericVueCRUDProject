@@ -11,6 +11,14 @@ import routes from './routes'
  * with the Router instance.
  */
 
+const isUserLoggedIn = () => {
+  if (localStorage.getItem('feathers-jwt') === '' || localStorage.getItem('feathers-jwt') === null) {
+    return false
+  } else {
+    return true
+  }
+}
+
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -27,8 +35,10 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    if (to.meta.needsAuth) {
-      next('/')
+    if (to.meta.needsAuth && isUserLoggedIn()) {
+      next()
+    } else if (to.meta.needsAuth && !isUserLoggedIn()) {
+      next('/login') // Redirecting to home page when user is trying to enter \login page is still not fix. To be fix on the next sprint.
     } else {
       next()
     }
