@@ -10,7 +10,10 @@ const routes = [
   },
   {
     path: '/home',
-    component: () => import('components/main/HomePage.vue')
+    component: () => import('components/main/HomePage.vue'),
+    meta: {
+      needsAuth: true
+    }
   },
 
   // Always leave this as last one,
