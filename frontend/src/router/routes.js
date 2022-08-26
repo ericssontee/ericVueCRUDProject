@@ -5,7 +5,21 @@ const routes = [
     component: () => import('components/main/HomePage.vue'),
     meta: {
       needsAuth: true
-    }
+    },
+    children: [
+      {
+        path: '/inventory',
+        component: () => import('components/main/InventoryPage.vue')
+      },
+      {
+        path: '/users',
+        component: () => import('components/main/UsersPage.vue')
+      },
+      {
+        path: '/settings',
+        component: () => import('components/main/SettingsPage.vue')
+      }
+    ]
   },
   {
     path: '/',
