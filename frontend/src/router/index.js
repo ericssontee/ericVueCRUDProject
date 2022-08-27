@@ -1,6 +1,8 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { ref } from 'vue'
+import { appFeathers } from 'src/boot/bootLib'
 
 /*
  * If not building with SSR mode, you can
@@ -15,7 +17,18 @@ const isUserLoggedIn = () => {
   if (localStorage.getItem('feathers-jwt') === '' || localStorage.getItem('feathers-jwt') === null) {
     return false
   } else {
-    return true
+    let isTokenValid = ref(true)
+    appFeathers.authenticate({
+      strategy: 'jwt',
+      accessToken: localStorage.getItem('feathers-jwt')
+    }).then(() => {
+      isTokenValid = true
+    }).catch(e => {
+      console.error('Authentication error', e)
+      alert('Credentials has already been expired. Please login again.')
+      isTokenValid = false
+    })
+    return isTokenValid
   }
 }
 
@@ -35,6 +48,8 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
+    console.log(to.meta.needsAuth)
+    console.log(isUserLoggedIn())
     if (to.meta.needsAuth && isUserLoggedIn()) {
       next()
     } else if (to.meta.needsAuth && !isUserLoggedIn()) {
