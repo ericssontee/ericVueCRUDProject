@@ -49,10 +49,10 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     console.log(to.meta.needsAuth)
-    console.log(isUserLoggedIn())
-    if (to.meta.needsAuth && isUserLoggedIn()) {
+    console.log(isUserLoggedIn().value)
+    if (to.meta.needsAuth && isUserLoggedIn().value) {
       next()
-    } else if (to.meta.needsAuth && !isUserLoggedIn()) {
+    } else if (to.meta.needsAuth && !isUserLoggedIn().value) {
       next('/login') // Redirecting to home page when user is trying to enter \login page is still not fix. To be fix on the next sprint.
     } else {
       next()
