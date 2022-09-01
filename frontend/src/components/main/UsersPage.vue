@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
-      title="Treats"
+      title="Users"
       :rows="rows"
       :columns="columns"
       row-key="name"
@@ -13,57 +13,48 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from 'vue'
-const { $api } = getCurrentInstance().appContext.config.globalProperties
+import { onMounted, ref } from 'vue'
+import { api } from 'src/boot/axios'
+// const { $api } = getCurrentInstance().appContext.config.globalProperties // axios api
 
-const users = () => {
-  const usersB = ref([])
-  $api.get('users')
+const fetchUsers = ref([]) // fetch data from axios api call
+const userNames = ref([]) // fetch name data outside onMounted hook
+
+// axios api call
+const dataAsync = async () => {
+  await api.get('users')
     .then(response => {
-      console.log(response.data)
       fetchUsers.value = response.data
-      console.log(fetchUsers.value)
-      const usersA = fetchUsers.value.data.map(obj => {
-        return {
-          name: obj.name,
-          email: obj.email
-        }
-      })
-      usersB.value = usersA
-      return usersB.value
     })
     .catch(error => {
       console.log(error)
     })
-  return usersB.value
 }
 
-const fetchUsers = ref([])
+onMounted(async () => {
+  await dataAsync()
+  console.log('users value after axios call', fetchUsers.value.data)
+  const user = fetchUsers.value.data.map(obj => {
+    return {
+      name: obj.name
+    }
+  })
+  userNames.value = [...user]
+})
 
-console.log(users())
+const rows = userNames
+
+// Returns an empty array
 
 const columns = [
   {
     name: 'name',
     required: true,
-    label: 'Dessert (100g serving)',
+    label: 'Name',
     align: 'left',
     field: row => row.name,
     format: val => `${val}`,
     sortable: true
-  }
-]
-
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
   }
 ]
 

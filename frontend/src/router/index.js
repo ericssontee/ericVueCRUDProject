@@ -54,6 +54,7 @@ export default route(function (/* { store, ssrContext } */) {
       next()
     } else if (to.meta.needsAuth && !isUserLoggedIn().value) {
       next('/login') // Redirecting to home page when user is trying to enter \login page is still not fix. To be fix on the next sprint.
+      localStorage.clear()
     } else {
       next()
     }
