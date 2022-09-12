@@ -2,12 +2,33 @@
   <div class="q-pa-md">
     <q-table title="Users" :rows="rows" :columns="columns" row-key="id">
       <template v-slot:body-cell-actions="props">
-            <q-td :props="props">
-              <q-btn dense round flat color="grey" icon="edit" @click="editUser(props.row, 'id')"></q-btn>
-              <q-btn dense round flat color="grey" icon="delete" @click="deleteUser(props.row, 'id')"></q-btn>
-            </q-td>
-          </template>
+        <q-td :props="props">
+          <q-btn dense round flat color="grey" icon="edit" @click="openEditUserCard(props.row, 'id')"></q-btn>
+          <q-btn dense round flat color="grey" icon="delete" @click="deleteUser(props.row, 'id')"></q-btn>
+        </q-td>
+      </template>
     </q-table>
+    <q-dialog v-model="isEditCardOpen" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Edit User</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <div>Email:</div>
+          <q-input outlined v-model="editEmailTextBox" autofocus @keyup.enter="prompt = false" />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <div>Name:</div>
+          <q-input outlined v-model="editNameTextBox" autofocus @keyup.enter="prompt = false" />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat @click="saveEditUserCard(tempEditId, editEmailTextBox, editNameTextBox)" label="Save" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -18,6 +39,13 @@ import { api } from 'src/boot/axios'
 
 const fetchUsers = ref([]) // fetch data from axios api call
 const users = ref([]) // fetch name data outside onMounted hook
+
+const isEditCardOpen = ref(false)
+const editEmailTextBox = ref('')
+const editNameTextBox = ref('')
+const tempEditId = ref('')
+const tempEditEmail = ref('')
+const tempEditName = ref('')
 
 const getUsers = async () => {
   // axios api get Users
@@ -46,10 +74,60 @@ const getUsers = async () => {
 
 getUsers()
 
-const rows = users
-
-const editUser = (props) => {
+const openEditUserCard = (props) => {
   console.log(`Edit ID: ${props.id}`)
+  isEditCardOpen.value = true
+  tempEditId.value = props.id
+  tempEditEmail.value = props.email
+  tempEditName.value = props.name
+  editEmailTextBox.value = props.email
+  editNameTextBox.value = props.name
+}
+
+const saveEditUserCard = (id, email, name) => {
+  const emailToBeSave = email
+  const nameToBeSave = name
+
+  console.log(`${emailToBeSave} and ${tempEditEmail.value}`)
+  console.log(`${nameToBeSave} and ${tempEditName.value}`)
+
+  if (emailToBeSave === tempEditEmail.value && nameToBeSave === tempEditName.value) {
+    alert('No Changes Made.')
+    isEditCardOpen.value = true
+  } else if (emailToBeSave !== tempEditEmail.value) {
+    api.put(`users/${id}`, {
+      email: emailToBeSave,
+      name: tempEditName.value
+    }).then(() => {
+      alert('User is successfully updated.')
+      getUsers()
+      isEditCardOpen.value = false
+    }).catch(error => {
+      console.log(error)
+    })
+  } else if (nameToBeSave !== tempEditName.value) {
+    api.put(`users/${id}`, {
+      email: tempEditEmail.value,
+      name: nameToBeSave
+    }).then(() => {
+      alert('User is successfully updated.')
+      getUsers()
+      isEditCardOpen.value = false
+    }).catch(error => {
+      console.log(error)
+    })
+  } else {
+    api.put(`users/${id}`, {
+      email: emailToBeSave,
+      name: nameToBeSave
+    }).then(() => {
+      alert('User is successfully updated.')
+      getUsers()
+      isEditCardOpen.value = false
+    }).catch(error => {
+      console.log(error)
+    })
+  }
 }
 
 const deleteUser = (props) => {
@@ -98,5 +176,7 @@ const columns = [
     label: 'Action'
   }
 ]
+
+const rows = users
 
 </script>
