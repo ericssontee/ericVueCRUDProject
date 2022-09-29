@@ -29,5 +29,5 @@
     }
   },
   "nedb": "../data",
-  "mssql": "mssql://ericSQL:12345@192.168.68.122:1433/FeathersJSSQLServerDemo"
+  "mssql": "mssql://ericSQL:12345@localhost:1433/FeathersJSSQLServerDemo"
 }

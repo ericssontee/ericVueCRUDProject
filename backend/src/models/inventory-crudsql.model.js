@@ -10,6 +10,10 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    brand: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     qty: {
       type: DataTypes.INTEGER,
       allowNull: false
