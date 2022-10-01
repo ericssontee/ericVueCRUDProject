@@ -1,16 +1,11 @@
 <template>
-  <div class="column items-end">
-    <q-btn color="secondary" >Add Item</q-btn>
-  </div>
-  <div>
-    <div class="q-pa-md">
-    <q-table
-      title="Inventory"
-      :rows="rows"
-      :columns="columns"
-      row-key="id"
-    />
-  </div>
+
+  <div class="q-pa-md">
+    <q-table title="Inventory" :rows="rows" :columns="columns" row-key="id">
+      <template v-slot:top-right>
+          <q-btn color="secondary">Add Item</q-btn>
+      </template>
+    </q-table>
   </div>
 </template>
 
@@ -37,14 +32,15 @@ const getItems = async () => {
 
   const item = fetchItems.value.data.map(obj => {
     return {
-      id: obj._id,
+      id: obj.id,
       item: obj.item,
       brand: obj.brand,
-      qty: obj.qty
+      qty: obj.qty,
+      price: obj.price
     }
   })
 
-  items.value = [...item] // Update users array
+  items.value = [...item] // Update items array
 }
 
 getItems()
@@ -59,8 +55,28 @@ const columns = [
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'brand', align: 'left', label: 'Brand', field: row => row.brand, sortable: true },
-  { name: 'qty', align: 'left', label: 'QTY', field: row => row.qty, sortable: true }
+  {
+    name: 'brand',
+    align: 'left',
+    label: 'Brand',
+    field: row => row.brand,
+    sortable: true
+  },
+  {
+    name: 'qty',
+    align: 'left',
+    label: 'QTY',
+    field: row => row.qty,
+    sortable: true
+  },
+  {
+    name: 'price',
+    align: 'left',
+    label: 'Price',
+    field: row => row.price,
+    format: val => `${String.fromCharCode(8369) + parseFloat(val).toFixed(2)}`, // 8369 is the ASCII code for Philippine Peso. Function parseFloat will convert string into Float data
+    sortable: true
+  }
 ]
 
 const rows = items

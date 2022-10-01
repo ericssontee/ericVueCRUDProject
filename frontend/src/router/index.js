@@ -25,8 +25,8 @@ const isUserLoggedIn = () => {
       isTokenValid = true
     }).catch(e => {
       console.error('Authentication error', e)
-      alert('Credentials has already been expired. Please login again.')
       isTokenValid = false
+      alert('Credentials has already been expired. Please login again.')
     })
     return isTokenValid
   }
@@ -49,12 +49,12 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     console.log(to.meta.needsAuth)
-    console.log(isUserLoggedIn().value)
-    if (to.meta.needsAuth && isUserLoggedIn().value) {
+    console.log(isUserLoggedIn())
+    if (to.meta.needsAuth && isUserLoggedIn()) {
       next()
-    } else if (to.meta.needsAuth && !isUserLoggedIn().value) {
-      next('/login') // Redirecting to home page when user is trying to enter \login page is still not fix. To be fix on the next sprint.
+    } else if (to.meta.needsAuth && !isUserLoggedIn()) {
       localStorage.clear()
+      next('/login') // Redirecting to home page when user is trying to enter \login page is still not fix. To be fix on the next sprint.
     } else {
       next()
     }

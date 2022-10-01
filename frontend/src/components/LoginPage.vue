@@ -9,7 +9,7 @@
         </q-card-section>
         <q-card-section class="col-7 ">
           <q-input class="q-pb-sm" square outlined v-model="emailText" type="email" label="Email" />
-          <q-input square outlined v-model="passText" type="password" label="Password" />
+          <q-input square outlined v-model="passText" type="password" label="Password" @keyup.enter="login(emailText, passText)"/>
           <br />
           <q-btn @click="login(emailText, passText)">Login</q-btn>
           <br />
